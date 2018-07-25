@@ -1,6 +1,24 @@
+/* ns16550.c - NS16550D serial driver */
 
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
+/*
+ * Copyright (c) 2010, 2012-2015 Wind River Systems, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * @brief NS16550 Serial Driver
+ *
+ * This is the driver for the Intel NS16550 UART Chip used on the PC 386.
+ * It uses the SCCs in asynchronous mode only.
+ *
+ * Before individual UART port can be used, uart_ns16550_port_init() has to be
+ * called to setup the port.
+ *
+ * - the following macro for the number of bytes between register addresses:
+ *
+ *  UART_REG_ADDR_INTERVAL
+ */
 #include "cpu_sun4i.h"
 
 #define uint32_t unsigned int
