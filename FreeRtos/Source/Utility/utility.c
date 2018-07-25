@@ -19,6 +19,15 @@
 #define	GICH_BASE		(SUNXI_GIC400_BASE + 0x4000)
 #define	GICV_BASE		(SUNXI_GIC400_BASE + 0x5000)
 
+//
+#define PIO_Pn_BASE     (SUNXI_PIO_BASE)
+#define PIO_Pn_INT_BASE (SUNXI_PIO_BASE+0x200)
+#define PIO_PL_BASE     (SUNXI_R_PIO_BASE)
+#define PIO_PL_INT_BASE (SUNXI_R_PIO_BASE+0x200)
+
+#define I2SPCM0_BASE    (SUNXI_IIS_0BASE)
+#define I2SPCM2_BASE    (SUNXI_LRADC_BASE)
+
 extern void uart_init(int which, uint32_t port, int baud_rate);
 extern void uart_char(char MyData);
 //extern void __rt_lib_init(unsigned heapbase, unsigned heaptop);
@@ -36,24 +45,6 @@ void writel(unsigned int *x, unsigned int y)
 {
     *((volatile unsigned int*)x) = y;
 }
-
-#if 0
-static void read_timer_status(void)
-{
-    unsigned int Test1,Test2=0;
-    int i =0;
-	struct sunxi_timer_reg *timers =(struct sunxi_timer_reg *)SUNXI_TIMER_BASE;
-    Test1 = readl(&timers->tirqen);
-    Test2 = readl(&timers->tirqsta);
-	printf ("Timer Status - %x %x \n\r",Test1,Test2);
-	writel(&timers->tirqsta,Test2);
-	//    for(i=0x04; i < 0x40 ;i+=4)
-    {
-		i=0x04;
-    	printf ("Read  0x%02x = 0x%08x,0x%08x,0x%08x,0x%08x,0x%08x,0x%08x,0x%08x,0x%08x \n\r",i,readl((unsigned int *)(GICD_BASE+i+0x100)),readl((unsigned int *)(GICD_BASE+i+0x180)),readl((unsigned int *)(GICD_BASE+i+0xd00)),readl((unsigned int *)(GICD_BASE+i+0x200)),readl((unsigned int *)(GICD_BASE+i+0x280)),readl((unsigned int *)(GICD_BASE+i+0x300)),readl((unsigned int *)(GICD_BASE+i+0x400)),readl((unsigned int *)(GICD_BASE+i+0x800)));
-    }                                                                                              
-}
-#endif
 
 int UtilityInit(void)
 {
@@ -131,45 +122,11 @@ void TimerInitialize()
     writel(&timers->tirqen,0x01);
 }
 
+
 void FIQInterruptHandler(void)
 {
 	printf ("FIQInterruptHandler \n\r");
 }
-#if 0
-static int Count = 0;
-extern void FreeRTOS_Tick_Handler( void );
-void IRQInterruptHandler(void)
-{
-  	struct sunxi_timer_reg *timers =(struct sunxi_timer_reg *)SUNXI_TIMER_BASE;
-	unsigned int *Test =(unsigned int *)(GICC_BASE+0x0c);
-	unsigned int IrqId = readl(Test);
-    switch(IrqId)
-    {
-        case 50:
-            writel(&timers->tirqsta,0x01);
-        	printf ("IRQInterruptHandler %d \n\r",IrqId);
-            break;
-        case 51:
-            writel(&timers->tirqsta,0x02);
-            FreeRTOS_Tick_Handler();
-//        	printf ("IRQInterruptHandler %d \n\r",IrqId);
-            break;
-        default:
-        	printf ("Unknown IRQInterruptHandler %d \n\r",IrqId);
-            break;
-    }
-	Test =(unsigned int *)(GICC_BASE+0x10);
-	writel(Test,IrqId);	
-    __enable_irq();
-}
-#endif
-
-#if 0
-void ServiceInterruptHandler(void)
-{
-	printf ("ServiceInterruptHandler \n\r");
-}
-#endif
 
 void PreFetchInterruptHandler(void)
 {
